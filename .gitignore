@@ -1,0 +1,10 @@
+*.class
+.classpath
+.project
+.settings/
+build/
+/bin/
+/target/
+*.exe
+src/main/webapp/WEB-INF/settings/settings.properties
+src/main/webapp/WEB-INF/settings/permissions.properties
