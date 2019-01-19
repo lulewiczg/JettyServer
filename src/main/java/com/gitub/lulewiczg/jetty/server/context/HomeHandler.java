@@ -22,18 +22,13 @@ public class HomeHandler extends HandlerWrapper {
     @Override
     public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
-        if (response.isCommitted() || baseRequest.isHandled())
-            return;
-
-        baseRequest.setHandled(true);
-        if (!request.getMethod().equals(HttpMethod.GET.asString()) || !request.getRequestURI().equals("/")) {
-            response.sendError(HttpServletResponse.SC_NOT_FOUND);
+        if (!request.getRequestURI().equals("/") || response.isCommitted() || baseRequest.isHandled()
+                || !request.getMethod().equals(HttpMethod.GET.asString())) {
             return;
         }
-
         StringBuilder builder = new StringBuilder();
         builder.append("<html>\n<head>\n<title>Jetty");
-        builder.append("</title>\n<body>\n<h2>Welcome to jetty</h2>\n");
+        builder.append("</title>\n<body>\n<h2>Welcome to Jetty</h2>\n");
         builder.append("<p>Jetty is running successfully</p>");
 
         Server server = getServer();
@@ -59,6 +54,7 @@ public class HomeHandler extends HandlerWrapper {
         try (OutputStream out = response.getOutputStream()) {
             out.write(builder.toString().getBytes());
         }
+        baseRequest.setHandled(true);
     }
 
 }

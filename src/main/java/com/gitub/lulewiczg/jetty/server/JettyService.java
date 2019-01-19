@@ -3,18 +3,15 @@ package com.gitub.lulewiczg.jetty.server;
 import org.eclipse.jetty.annotations.AnnotationConfiguration;
 import org.eclipse.jetty.plus.webapp.EnvConfiguration;
 import org.eclipse.jetty.plus.webapp.PlusConfiguration;
-import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.handler.HandlerCollection;
 import org.eclipse.jetty.webapp.Configuration;
 import org.eclipse.jetty.webapp.FragmentConfiguration;
 import org.eclipse.jetty.webapp.JettyWebXmlConfiguration;
-import org.eclipse.jetty.webapp.WebAppContext;
 
 import com.gitub.lulewiczg.jetty.exceptions.JettyException;
 import com.gitub.lulewiczg.jetty.resource.DefaultMessageHandler;
 import com.gitub.lulewiczg.jetty.resource.Message;
-import com.gitub.lulewiczg.jetty.server.context.HomeHandler;
+import com.gitub.lulewiczg.jetty.server.context.WebAppDeployer;
 
 /**
  * Jetty container service.
@@ -27,23 +24,17 @@ public class JettyService {
     private ServerState state = ServerState.STOPPED;
     private DefaultMessageHandler msgHandler;
     private Object lock = new Object();
+    private String webappPath;
 
-    public JettyService(DefaultMessageHandler msgHandler) throws Exception {
+    public JettyService(DefaultMessageHandler msgHandler, String webappPath) throws Exception {
         this.msgHandler = msgHandler;
+        this.webappPath = webappPath;
         server = new Server(8080);
 
         Configuration.ClassList classlist = Configuration.ClassList.setServerDefault(server);
         classlist.addAfter(FragmentConfiguration.class.getName(), EnvConfiguration.class.getName(),
                 PlusConfiguration.class.getName());
         classlist.addBefore(JettyWebXmlConfiguration.class.getName(), AnnotationConfiguration.class.getName());
-        // Test WebApp
-        WebAppContext webapp = new WebAppContext();
-        webapp.setContextPath("/ContentServer");
-        webapp.setWar("ContentServer.war");
-
-        HandlerCollection handlers = new HandlerCollection();
-        handlers.setHandlers(new Handler[] { new HomeHandler(), webapp });
-        server.setHandler(handlers);
     }
 
     /**
@@ -63,9 +54,10 @@ public class JettyService {
                 public void run() {
                     try {
                         printMsg(Message.SERVER_STARTING);
+                        deploy();
                         server.start();
-                        server.join();
                         printMsg(Message.SERVER_START);
+                        server.join();
                     } catch (Exception e) {
                         throw new JettyException(e);
                     }
@@ -93,8 +85,8 @@ public class JettyService {
                     try {
                         printMsg(Message.SERVER_STOPPING);
                         server.stop();
-                        server.join();
                         printMsg(Message.SERVER_STOP);
+                        server.join();
                     } catch (Exception e) {
                         throw new JettyException(e);
                     }
@@ -102,6 +94,13 @@ public class JettyService {
             };
             t.start();
         }
+    }
+
+    /**
+     * Deploys webapps if not yet deployed.
+     */
+    private void deploy() {
+        new WebAppDeployer(server, webappPath).deploy();
     }
 
     /**

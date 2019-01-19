@@ -6,5 +6,6 @@ build/
 /bin/
 /target/
 *.exe
+test/
 src/main/webapp/WEB-INF/settings/settings.properties
 src/main/webapp/WEB-INF/settings/permissions.properties
