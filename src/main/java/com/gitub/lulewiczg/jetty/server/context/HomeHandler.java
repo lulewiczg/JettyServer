@@ -1,4 +1,4 @@
-package com.gitub.lulewiczg.jetty;
+package com.gitub.lulewiczg.jetty.server.context;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -50,7 +50,7 @@ public class HomeHandler extends HandlerWrapper {
             ContextHolder contextHolder = new ContextHolder(context);
             holders.add(contextHolder);
         }
-        builder.append(ContextHolder.toHMTL(holders));
+        builder.append(ContextHolder.toHTML(holders));
         builder.append("\n</body>\n</html>\n");
         response.setStatus(HttpStatus.OK_200);
         response.setContentLength(builder.length());

@@ -1,4 +1,4 @@
-package com.gitub.lulewiczg.jetty;
+package com.gitub.lulewiczg.jetty.server;
 
 import org.eclipse.jetty.annotations.AnnotationConfiguration;
 import org.eclipse.jetty.plus.webapp.EnvConfiguration;
@@ -14,6 +14,7 @@ import org.eclipse.jetty.webapp.WebAppContext;
 import com.gitub.lulewiczg.jetty.exceptions.JettyException;
 import com.gitub.lulewiczg.jetty.resource.DefaultMessageHandler;
 import com.gitub.lulewiczg.jetty.resource.Message;
+import com.gitub.lulewiczg.jetty.server.context.HomeHandler;
 
 /**
  * Jetty container service.
@@ -23,6 +24,7 @@ import com.gitub.lulewiczg.jetty.resource.Message;
 public class JettyService {
 
     private volatile Server server;
+    private ServerState state = ServerState.STOPPED;
     private DefaultMessageHandler msgHandler;
     private Object lock = new Object();
 
@@ -111,4 +113,11 @@ public class JettyService {
     protected void printMsg(Message m) {
         System.out.println(msgHandler.getMsg(m));
     }
+
+    public ServerState getState() {
+        synchronized (lock) {
+            return state;
+        }
+    }
+
 }

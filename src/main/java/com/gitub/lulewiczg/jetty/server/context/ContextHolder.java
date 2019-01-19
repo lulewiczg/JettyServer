@@ -1,4 +1,4 @@
-package com.gitub.lulewiczg.jetty;
+package com.gitub.lulewiczg.jetty.server.context;
 import java.util.List;
 
 import org.eclipse.jetty.server.handler.ContextHandler;
@@ -39,7 +39,7 @@ public class ContextHolder {
      *
      * @return HTML
      */
-    public static String toHMTL(List<ContextHolder> contexts) {
+    public static String toHTML(List<ContextHolder> contexts) {
         StringBuilder builder = new StringBuilder();
         builder.append("<ul>");
         for (ContextHolder holder : contexts) {

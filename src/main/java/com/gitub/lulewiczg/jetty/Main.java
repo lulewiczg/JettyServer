@@ -1,9 +1,15 @@
+package com.gitub.lulewiczg.jetty;
 
 import java.util.Scanner;
 
-import com.gitub.lulewiczg.jetty.JettyService;
 import com.gitub.lulewiczg.jetty.resource.DefaultMessageHandler;
+import com.gitub.lulewiczg.jetty.server.JettyService;
 
+/**
+ * Simple UI implementation.
+ *
+ * @author Grzegurz
+ */
 public class Main {
 
     public static void main(String[] args) throws Exception {
